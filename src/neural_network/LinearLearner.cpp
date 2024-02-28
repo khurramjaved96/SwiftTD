@@ -47,7 +47,8 @@ float SemiGradientTDLambda::Step(std::vector<float> &features, float reward) {
         this->e[i] = this->e[i] * this->gamma * this->lambda + features_old[i];
         this->weights[i] = this->weights[i] + step_size * (td_error) * this->e[i];
         if ((1 - step_size * features_old[i] * e[i]) > 0)
-            this->h[i] = this->h[i] * (1 - step_size * features_old[i] * e[i]) + step_size * e[i] * td_error;
+            this->h[i] = this->h[i] * (1 + step_size * (gamma * features[i] - features_old[i]) * e[i]) +
+                         step_size * e[i] * td_error;
         else
             this->h[i] = step_size * e[i] * td_error;
     }
@@ -77,6 +78,7 @@ FullGradientTDLambda::FullGradientTDLambda(int num_features, float lambda, float
     this->u = std::vector<float>(num_features, 0);
 }
 
+
 float FullGradientTDLambda::Step(std::vector<float> &features, float reward) {
     this->counter++;
     this->v = Math::DotProduct(this->weights, features_old);
@@ -88,13 +90,13 @@ float FullGradientTDLambda::Step(std::vector<float> &features, float reward) {
         h_bar[i] = gamma * gamma * lambda * lambda * h_bar[i] + h[i];
         y[i] = gamma * lambda * y[i] + td_error * h_bar[i];
         betas[i] = betas[i] - theta / (exp(betas[i]) + eps) *
-                                          (y[i] * delta_grad + gamma * lambda * u[i] * td_error);
+                              (y[i] * delta_grad + gamma * lambda * u[i] * td_error);
         float step_size = exp(betas[i]);
         u[i] = gamma * lambda * u[i] + h_bar[i] * delta_grad;
         e[i] = e[i] * this->gamma * this->lambda + features_old[i];
         weights[i] = weights[i] + step_size * (td_error) * e[i];
         if ((1 - step_size * delta_grad * e[i]) > 0)
-            h[i] = h[i] * (1 - step_size * delta_grad * e[i]) + td_error * step_size * e[i];
+            h[i] = h[i] * (1 + step_size * delta_grad * e[i]) + td_error * step_size * e[i];
         else
             h[i] = td_error * step_size * e[i];
     }
@@ -102,11 +104,10 @@ float FullGradientTDLambda::Step(std::vector<float> &features, float reward) {
     return this->v_next;
 }
 
-TrueOnlineTDLambda::TrueOnlineTDLambda(int num_features, float lambda, float initial_alpha, float gamma, float eps,
-                                       float max_step_size, float step_size_decay, float meta_step_size,
-                                       float weight_decay) {
+SwiftTD::SwiftTD(int num_features, float lambda, float initial_alpha, float gamma, float eps,
+                 float max_step_size, float step_size_decay, float meta_step_size,
+                 float weight_decay) {
     this->step_size_decay = step_size_decay;
-    this->weight_decay = weight_decay;
     this->lambda = lambda;
     this->gamma = gamma;
     this->eps = eps;
@@ -123,18 +124,11 @@ TrueOnlineTDLambda::TrueOnlineTDLambda(int num_features, float lambda, float ini
     this->counter = 0;
     this->v_old = 0;
     this->v = 0;
-    this->change_in_value = 0;
-    this->dot_product = 0;
-    this->beta_1 = 0.0;
-    this->beta_2 = 0.99;
     this->meta_step_size = meta_step_size;
     this->max_step_size = max_step_size;
 
 }
 
-void TrueOnlineTDLambda::SetWeights(std::vector<float> weights) {
-    this->weights = weights;
-}
 
 float Math::DotProduct(std::vector<float> &a, std::vector<float> &b) {
     float result = 0;
@@ -145,7 +139,7 @@ float Math::DotProduct(std::vector<float> &a, std::vector<float> &b) {
 }
 
 
-float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
+float SwiftTD::Step(std::vector<float> &features, float reward) {
     this->counter++;
     float value = Math::DotProduct(this->weights, features_old);
     float value_next = Math::DotProduct(this->weights, features);
@@ -166,14 +160,15 @@ float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
         idbd_trace[i] = idbd_trace[i] * this->gamma * this->lambda + this->h[i] * features_old[i];
         if (scale_factor == 1) {
             this->betas[i] += this->meta_step_size / (exp(this->betas[i]) + eps) * (td_error * idbd_trace[i]);
-            if (this->betas[i] > 0) {
-                this->betas[i] = 0;
-                this->idbd_trace[i] = 0;
-                this->h[i] = 0;
-                this->h_old[i] = 0;
-                this->be[i] = 0;
-            }
+//            if (this->betas[i] > 0) {
+//                this->betas[i] = 0;
+//                this->idbd_trace[i] = 0;
+//                this->h[i] = 0;
+//                this->h_old[i] = 0;
+//                this->be[i] = 0;
+//            }
         }
+
 
         if (scale_factor < 1) {
             if (features_old[i] > 0) {
@@ -184,13 +179,8 @@ float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
                 this->be[i] = 0;
             }
         }
+
         float step_size = exp(this->betas[i]) * scale_factor;
-
-
-//        this->be[i] = this->lambda * this->gamma * this->be[i] + step_size * features_old[i] -
-//                      this->gamma * this->lambda * step_size * this->e[i] * features_old[i] * features_old[i] -
-//                      step_size * this->gamma * this->lambda * features_old[i] * features_old[i] * this->be[i];
-
         this->be[i] = this->lambda * this->gamma * this->be[i] + step_size * features_old[i] -
                       this->gamma * this->lambda * step_size * dot_product_eligibility * features_old[i] -
                       step_size * this->gamma * this->lambda * features_old[i] * features_old[i] * this->be[i];
@@ -201,17 +191,11 @@ float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
 
         this->weights[i] =
                 this->weights[i] + (td_error) * this->e[i] - step_size * (value - this->v_old) * features_old[i];
-        if (this->features_old[i] > 0)
-            this->weights[i] *= weight_decay;
 
         float temp = this->h[i];
-//        this->h[i] = this->h[i] + td_error * this->be[i] +
-//                     this->e[i] * (this->gamma * features[i] * this->h[i] - this->h_old[i] * features_old[i])
-//                     - features_old[i] *
-//                     (step_size * (value - this->v_old) + step_size * features_old[i] * (this->h[i] - this->h_old[i]));
 
         this->h[i] = this->h[i] + td_error * this->be[i] +
-                     this->e[i] * (this->gamma * features[i] * this->h[i] * 0 - this->h_old[i] * features_old[i])
+                     this->e[i] * (-1 * this->h_old[i] * features_old[i])
                      - features_old[i] *
                        (step_size * (value - this->v_old) +
                         step_size * features_old[i] * (this->h[i] - this->h_old[i]));
@@ -223,7 +207,8 @@ float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
     return value_next;
 }
 
-std::vector<float> TrueOnlineTDLambda::GetStepSizePerPixel() {
+
+std::vector<float> SwiftTD::GetStepSizePerPixel() {
     std::vector<float> data(84 * 84, 0);
     for (int i = 0; i < 84 * 84; i++) {
         for (int j = 0; j < 16; j++) {
@@ -233,19 +218,34 @@ std::vector<float> TrueOnlineTDLambda::GetStepSizePerPixel() {
     return data;
 }
 
-void TrueOnlineTDLambda::ResetTrace() {
-    this->e = std::vector<float>(this->e.size(), 0);
-    this->h = std::vector<float>(this->h.size(), 0);
-    this->h_old = std::vector<float>(this->h_old.size(), 0);
-    this->be = std::vector<float>(this->be.size(), 0);
-    this->idbd_trace = std::vector<float>(this->idbd_trace.size(), 0);
-    this->momentum_term = std::vector<float>(this->momentum_term.size(), 0);
-    this->gradient_norm = std::vector<float>(this->gradient_norm.size(), 0);
+
+TrueOnlineTDLambda::TrueOnlineTDLambda(int num_features, float lambda, float alpha, float gamma) {
+    this->lambda = lambda;
+    this->gamma = gamma;
+    this->weights = std::vector<float>(num_features, 0);
+    this->features_old = std::vector<float>(num_features, 0);
     this->counter = 0;
     this->v_old = 0;
     this->v = 0;
-    this->rho = 0;
-    this->change_in_value = 0;
-    this->dot_product = 0;
+    this->step_size = alpha;
+    this->e = std::vector<float>(num_features, 0);
 }
 
+float TrueOnlineTDLambda::Step(std::vector<float> &features, float reward) {
+    this->counter++;
+    float value = Math::DotProduct(this->weights, features_old);
+    float value_next = Math::DotProduct(this->weights, features);
+    float td_error = reward + this->gamma * value_next - this->v_old;
+    float dot_product_eligibility = Math::DotProduct(this->e, features_old);
+    for (int i = 0; i < features_old.size(); i++) {
+        this->e[i] = this->e[i] * this->gamma * this->lambda;
+        this->e[i] = this->e[i] + features_old[i] * step_size -
+                     step_size * this->gamma * this->lambda * (dot_product_eligibility) * features_old[i];
+        this->weights[i] =
+                this->weights[i] + (td_error) * this->e[i] - step_size * (value - this->v_old) * features_old[i];
+    }
+
+    this->features_old = features;
+    this->v_old = value_next;
+    return value_next;
+}
