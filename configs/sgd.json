@@ -1,0 +1,104 @@
+{
+  "experiment": {
+    "name": "sgd_2_life_hours",
+    "params": {
+      "seed": [
+        "0"
+      ],
+      "steps": [
+        "216000"
+      ],
+      "env": [
+        "AirRaid",
+        "Alien",
+        "Amidar",
+        "Asterix",
+        "Asteroids",
+        "Atlantis",
+        "BankHeist",
+        "BattleZone",
+        "BeamRider",
+        "Berzerk",
+        "Bowling",
+        "Boxing",
+        "Breakout",
+        "Carnival",
+        "Centipede",
+        "ChopperCommand",
+        "CrazyClimber",
+        "DemonAttack",
+        "DoubleDunk",
+        "Enduro",
+        "FishingDerby",
+        "Freeway",
+        "Frostbite",
+        "Gopher",
+        "Gravitar",
+        "Hero",
+        "IceHockey",
+        "Jamesbond",
+        "JourneyEscape",
+        "Kangaroo",
+        "Krull",
+        "KungFuMaster",
+        "MsPacman",
+        "NameThisGame",
+        "Phoenix",
+        "Pitfall",
+        "Pong",
+        "Pooyan",
+        "PrivateEye",
+        "Qbert",
+        "Riverraid",
+        "Robotank",
+        "Seaquest",
+        "Solaris",
+        "SpaceInvaders",
+        "StarGunner",
+        "TimePilot",
+        "Tutankham",
+        "UpNDown",
+        "VideoPinball",
+        "WizardOfWor",
+        "YarsRevenge",
+        "Zaxxon"
+      ],
+      "features": [
+        "112916"
+      ],
+      "lambda": [
+        "1.0"
+      ],
+      "gamma": [
+        "0.98"
+      ],
+      "eps": [
+        "1e-6"
+      ],
+      "max_step_size": [
+        "100000.0"
+      ],
+      "meta_step_size": [
+        "0.0"
+      ],
+      "min_eligibility_threshold": [
+        "0.01"
+      ],
+      "initial_step_size": [
+        "0.00000001",  "0.000001", "0.00001" ,"0.0001", "0.001", "0.01", "0.1",
+        "0.00000003", "0.000003", "0.00003", "0.0003", "0.003", "0.03", "0.3"
+      ],
+      "actions": [
+        "1"
+      ],
+      "weight_decay": [
+     "1.0"
+      ],
+      "step_size_decay": [
+        "1.0"
+      ]
+    }
+  }
+}
+
+
