@@ -1,0 +1,95 @@
+{
+  "experiment": {
+    "name": "td_lambda_semi_2",
+    "params": {
+      "seed": [
+        "0"
+      ],
+      "learner": [
+        "semi_gradient", "full_gradient"
+      ],
+      "steps": [
+        "216000"
+      ],
+      "env": [
+        "AirRaid",
+        "Alien",
+        "Amidar",
+        "Asterix",
+        "Asteroids",
+        "Atlantis",
+        "BankHeist",
+        "BattleZone",
+        "BeamRider",
+        "Berzerk",
+        "Bowling",
+        "Boxing",
+        "Breakout",
+        "Carnival",
+        "Centipede",
+        "ChopperCommand",
+        "CrazyClimber",
+        "DemonAttack",
+        "DoubleDunk",
+        "Enduro",
+        "FishingDerby",
+        "Freeway",
+        "Frostbite",
+        "Gopher",
+        "Gravitar",
+        "Hero",
+        "IceHockey",
+        "Jamesbond",
+        "JourneyEscape",
+        "Kangaroo",
+        "Krull",
+        "KungFuMaster",
+        "MsPacman",
+        "NameThisGame",
+        "Phoenix",
+        "Pitfall",
+        "Pong",
+        "Pooyan",
+        "PrivateEye",
+        "Qbert",
+        "Riverraid",
+        "Robotank",
+        "Seaquest",
+        "Solaris",
+        "SpaceInvaders",
+        "StarGunner",
+        "TimePilot",
+        "Tutankham",
+        "UpNDown",
+        "VideoPinball",
+        "WizardOfWor",
+        "YarsRevenge",
+        "Zaxxon"
+      ],
+      "features": [
+        "112916"
+      ],
+      "lambda": [
+        "1.0", "0.95"
+      ],
+      "gamma": [
+        "0.98"
+      ],
+      "eps": [
+        "1e-6"
+      ],
+      "meta_step_size": [
+        "1e-2",
+        "3e-3",
+        "1e-3",
+        "3e-4",
+        "1e-4"
+      ],
+      "initial_step_size": [
+        "0.00000001",
+        "0.000001",
+        "0.0001"
+      ]
+    }
+  }
+}

@@ -5,3 +5,11 @@ target_sources(Algorithm
     RomSettings.cpp
     RomUtils.cpp
 )
+
+
+target_sources(TDLambda
+        PRIVATE
+        Roms.cpp
+        RomSettings.cpp
+        RomUtils.cpp
+)

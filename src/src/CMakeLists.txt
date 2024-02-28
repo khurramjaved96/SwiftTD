@@ -8,3 +8,6 @@ add_subdirectory(environment)
 add_subdirectory(games)
 target_sources(Algorithm PUBLIC ale_interface.cpp)
 target_sources(Algorithm PUBLIC ale_interface.cpp)
+
+target_sources(TDLambda PUBLIC ale_interface.cpp)
+target_sources(TDLambda PUBLIC ale_interface.cpp)

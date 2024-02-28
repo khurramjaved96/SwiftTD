@@ -20,6 +20,7 @@ find_package(Threads REQUIRED)
 include_directories(${mariadb_INCLUDE_DIRS})
 
 add_executable(Algorithm true_online_td_lambda.cpp src/utils.cpp)
+add_executable(TDLambda td_lambda.cpp src/utils.cpp)
 add_executable(Count count.cpp)
 add_subdirectory(src)
 
@@ -43,5 +44,6 @@ list(APPEND link_libraries_list Env)
 
 
 target_link_libraries(Algorithm PRIVATE ${link_libraries_list})
+target_link_libraries(TDLambda PRIVATE ${link_libraries_list})
 target_link_libraries(Count PRIVATE Exp PkgConfig::mariadb)
 
