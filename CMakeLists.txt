@@ -44,6 +44,5 @@ list(APPEND link_libraries_list Env)
 
 
 target_link_libraries(Algorithm PRIVATE ${link_libraries_list})
-target_link_libraries(TDLambda PRIVATE ${link_libraries_list})
 target_link_libraries(Count PRIVATE Exp PkgConfig::mariadb)
 
