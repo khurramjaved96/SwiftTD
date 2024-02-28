@@ -43,15 +43,41 @@ int main(int argc, char *argv[]) {
 
 
     std::cout << "Starting experiment\n";
-    TrueOnlineTDLambda *t = new TrueOnlineTDLambda(my_experiment->get_int_param("features"),
-                                                   my_experiment->get_float_param("lambda"),
-                                                   my_experiment->get_float_param("initial_step_size"),
-                                                   my_experiment->get_float_param("gamma"),
-                                                   my_experiment->get_float_param("eps"),
-                                                   my_experiment->get_float_param("max_step_size"),
-                                                   my_experiment->get_float_param("step_size_decay"),
-                                                   my_experiment->get_float_param("meta_step_size"),
-                                                   my_experiment->get_float_param("weight_decay"));
+    LinearLearner *t;
+    if (my_experiment->get_string_param("learner") == "SwiftTD") {
+        t = new SwiftTD(my_experiment->get_int_param("features"),
+                        my_experiment->get_float_param("lambda"),
+                        my_experiment->get_float_param("initial_step_size"),
+                        my_experiment->get_float_param("gamma"),
+                        my_experiment->get_float_param("eps"),
+                        my_experiment->get_float_param("max_step_size"),
+                        my_experiment->get_float_param("step_size_decay"),
+                        my_experiment->get_float_param("meta_step_size"),
+                        my_experiment->get_float_param("weight_decay"));
+    } else if (my_experiment->get_string_param("learner") == "semi_gradient_td_lambda") {
+        t = new SemiGradientTDLambda(my_experiment->get_int_param("features"),
+                                     my_experiment->get_float_param("lambda"),
+                                     my_experiment->get_float_param("meta_step_size"),
+                                     my_experiment->get_float_param("initial_step_size"),
+                                     my_experiment->get_float_param("gamma"),
+                                     my_experiment->get_float_param("eps"));
+    } else if (my_experiment->get_string_param("learner") == "full_gradient_td_lambda") {
+        t = new FullGradientTDLambda(my_experiment->get_int_param("features"),
+                                     my_experiment->get_float_param("lambda"),
+                                     my_experiment->get_float_param("meta_step_size"),
+                                     my_experiment->get_float_param("initial_step_size"),
+                                     my_experiment->get_float_param("gamma"),
+                                     my_experiment->get_float_param("eps"));
+    } else if (my_experiment->get_string_param("learner") == "true_online_td_lambda") {
+        t = new TrueOnlineTDLambda(my_experiment->get_int_param("features"),
+                                   my_experiment->get_float_param("lambda"),
+                                   my_experiment->get_float_param("initial_step_size"),
+                                   my_experiment->get_float_param("gamma"));
+    } else {
+        std::cout << "Invalid learner\n";
+        return 0;
+    }
+
 
     std::vector<float> list_of_predictions;
     std::vector<float> list_of_rewards;
@@ -120,15 +146,18 @@ int main(int argc, char *argv[]) {
         }
 
     }
-    // get step_sizes
-    std::vector<float> step_size_per_pixel = t->GetStepSizePerPixel();
-    for (int i = 0; i < step_size_per_pixel.size(); i++) {
-        step_sizes.record_value(
-                {std::to_string(my_experiment->get_int_param("run")), std::to_string(i),
-                 std::to_string(step_size_per_pixel[i])});
-    }
-    step_sizes.commit_values();
     lifetime_error_metric.commit_values();
     predictions.commit_values();
+    // get step_sizes
+    if (my_experiment->get_string_param("learner") == "SwiftTD") {
+        SwiftTD *pointer = static_cast<SwiftTD *>(t);
+        std::vector<float> step_size_per_pixel = pointer->GetStepSizePerPixel();
+        for (int i = 0; i < step_size_per_pixel.size(); i++) {
+            step_sizes.record_value(
+                    {std::to_string(my_experiment->get_int_param("run")), std::to_string(i),
+                     std::to_string(step_size_per_pixel[i])});
+        }
+        step_sizes.commit_values();
+    }
     return 0;
 }
