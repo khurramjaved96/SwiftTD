@@ -1,7 +1,0 @@
-#target_sources(Atari PRIVATE utils.cpp)
-#add_subdirectory(atari)
-add_subdirectory(experiment)
-add_subdirectory(neural_network)
-add_subdirectory(src)
-add_subdirectory(environments)
-#add_subdirectory(environments)
