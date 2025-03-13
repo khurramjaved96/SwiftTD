@@ -22,8 +22,6 @@ public:
     std::vector<float> GetWeights();
 
     void SetGamma(float gamma);
-
-    virtual std::vector<float> GetStepSizePerPixel();
 };
 
 
@@ -62,8 +60,6 @@ public:
                        float step_size_decay, float meta_step_size);
 
     float Step(std::vector<float> &features_indices, float reward);
-
-    std::vector<float> GetStepSizePerPixel() override;
 };
 
 
@@ -104,8 +100,6 @@ public:
                             float step_size_decay, float meta_step_size);
 
     float Step(std::vector<int> &features_indices, float reward);
-
-    std::vector<float> GetStepSizePerPixel() override;
 };
 
 

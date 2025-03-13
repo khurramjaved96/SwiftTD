@@ -128,22 +128,6 @@ float SwiftTDDense::Step(std::vector<float> &features, float reward) {
 }
 
 
-std::vector<float> SwiftTDDense::GetStepSizePerPixel() {
-    std::vector<float> data(105 * 80, 0);
-    for (int i = 0; i < 105 * 80; i++) {
-        for (int j = 0; j < 24; j++) {
-            data[i] += exp(this->betas[i * 24 + j]);
-
-        }
-//        std::cout << data[i] << std::endl;
-    }
-
-    return data;
-}
-
-std::vector<float> SwiftTD::GetStepSizePerPixel() {
-    return std::vector<float>(0);
-}
 
 
 void SwiftTD::SetGamma(float gamma) {
@@ -261,17 +245,4 @@ float SwiftTDSparse::Step(std::vector<int> &features, float reward) {
     }
     this->v_old = this->v;
     return this->v;
-}
-
-
-std::vector<float> SwiftTDSparse::GetStepSizePerPixel() {
-    std::vector<float> data(105 * 80, 0);
-    for (int i = 0; i < 105 * 80; i++) {
-        for (int j = 0; j < 24; j++) {
-            data[i] += exp(this->betas[i * 24 + j]);
-
-        }
-    }
-
-    return data;
 }
