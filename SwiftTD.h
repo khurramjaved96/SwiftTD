@@ -49,11 +49,10 @@ private:
     float v;
     float eta;
     float eps;
-
-public:
     std::vector<float> betas;
     float unbounded_rate_of_learning;
     float actual_rate_of_learning;
+public:
     SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps, float max_step_size,
                  float step_size_decay, float meta_step_size);
     float Step(std::vector<float> &features_indices, float reward);
@@ -83,18 +82,15 @@ private:
     float v;
     float eta;
     std::vector<int> active_indices;
-
     float eps;
-
-public:
     std::vector<float> betas;
     float unbounded_rate_of_learning;
     float actual_rate_of_learning;
+public:
 
     SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma, float eps,
                   float max_step_size,
                   float step_size_decay, float meta_step_size);
-
     float Step(std::vector<int> &features_indices, float reward);
 };
 
