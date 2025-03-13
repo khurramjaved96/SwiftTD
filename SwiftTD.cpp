@@ -2,20 +2,20 @@
 // Created by Khurram Javed on 2024-02-18.
 //
 
-#include "LinearLearner.h"
+#include "SwiftTD.h"
 #include <vector>
 #include <iostream>
 #include <math.h>
 
-LinearLearner::LinearLearner() {
+SwiftTD::SwiftTD() {
 }
 
-std::vector<float> LinearLearner::GetWeights() {
+std::vector<float> SwiftTD::GetWeights() {
     return this->weights;
 }
 
 
-SwiftTDReorganized::SwiftTDReorganized(int num_features, float lambda, float initial_alpha, float gamma, float eps,
+SwiftTDDense::SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps,
                                        float max_step_size, float step_size_decay, float meta_step_size) {
     this->beta_normalizer = eps;
     this->eps = step_size_decay;
@@ -54,7 +54,7 @@ float Math::DotProduct(std::vector<float> &a, std::vector<float> &b) {
 }
 
 
-float SwiftTDReorganized::Step(std::vector<float> &features, float reward) {
+float SwiftTDDense::Step(std::vector<float> &features, float reward) {
     this->counter++;
 //    std::vector<float> features(this->weights.size(), 0);
 //    for (int i = 0; i < features_temp.size(); i++) {
@@ -128,7 +128,7 @@ float SwiftTDReorganized::Step(std::vector<float> &features, float reward) {
 }
 
 
-std::vector<float> SwiftTDReorganized::GetStepSizePerPixel() {
+std::vector<float> SwiftTDDense::GetStepSizePerPixel() {
     std::vector<float> data(105 * 80, 0);
     for (int i = 0; i < 105 * 80; i++) {
         for (int j = 0; j < 24; j++) {
@@ -141,17 +141,17 @@ std::vector<float> SwiftTDReorganized::GetStepSizePerPixel() {
     return data;
 }
 
-std::vector<float> LinearLearner::GetStepSizePerPixel() {
+std::vector<float> SwiftTD::GetStepSizePerPixel() {
     return std::vector<float>(0);
 }
 
 
-void LinearLearner::SetGamma(float gamma) {
+void SwiftTD::SetGamma(float gamma) {
     this->gamma = gamma;
 }
 
 
-SwiftTDReorganizedCache::SwiftTDReorganizedCache(int num_features, float lambda, float initial_alpha, float gamma,
+SwiftTDSparse::SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma,
                                                  float eps,
                                                  float max_step_size, float step_size_decay, float meta_step_size) {
     this->beta_normalizer = eps;
@@ -182,7 +182,7 @@ SwiftTDReorganizedCache::SwiftTDReorganizedCache(int num_features, float lambda,
 }
 
 
-float SwiftTDReorganizedCache::Step(std::vector<int> &features, float reward) {
+float SwiftTDSparse::Step(std::vector<int> &features, float reward) {
     this->counter++;
     float decay = this->gamma * this->lambda;
     this->v = 0;
@@ -264,7 +264,7 @@ float SwiftTDReorganizedCache::Step(std::vector<int> &features, float reward) {
 }
 
 
-std::vector<float> SwiftTDReorganizedCache::GetStepSizePerPixel() {
+std::vector<float> SwiftTDSparse::GetStepSizePerPixel() {
     std::vector<float> data(105 * 80, 0);
     for (int i = 0; i < 105 * 80; i++) {
         for (int j = 0; j < 24; j++) {

@@ -2,8 +2,8 @@
 // Created by Khurram Javed on 2024-02-18.
 //
 
-#ifndef TRUEONLINETDLAMBDATEST_LINEARLEARNER_H
-#define TRUEONLINETDLAMBDATEST_LINEARLEARNER_H
+#ifndef SWIFTTD_H
+#define SWIFTTD_H
 
 #include <vector>
 #include <random>
@@ -12,12 +12,12 @@ public:
     static float DotProduct(std::vector<float> &a, std::vector<float> &b);
 };
 
-class LinearLearner {
+class SwiftTD {
 protected:
     float gamma;
     std::vector<float> weights;
 public:
-    LinearLearner();
+    SwiftTD();
 
     std::vector<float> GetWeights();
 
@@ -27,7 +27,7 @@ public:
 };
 
 
-class SwiftTDReorganized : public LinearLearner {
+class SwiftTDDense : public SwiftTD {
 private:
     int counter;
 
@@ -58,7 +58,7 @@ public:
     float unbounded_rate_of_learning;
     float actual_rate_of_learning;
 
-    SwiftTDReorganized(int num_features, float lambda, float initial_alpha, float gamma, float eps, float max_step_size,
+    SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps, float max_step_size,
                        float step_size_decay, float meta_step_size);
 
     float Step(std::vector<float> &features_indices, float reward);
@@ -67,7 +67,7 @@ public:
 };
 
 
-class SwiftTDReorganizedCache : public LinearLearner {
+class SwiftTDSparse : public SwiftTD {
 private:
     int counter;
 
@@ -99,7 +99,7 @@ public:
     float unbounded_rate_of_learning;
     float actual_rate_of_learning;
 
-    SwiftTDReorganizedCache(int num_features, float lambda, float initial_alpha, float gamma, float eps,
+    SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma, float eps,
                             float max_step_size,
                             float step_size_decay, float meta_step_size);
 
@@ -109,4 +109,4 @@ public:
 };
 
 
-#endif //TRUEONLINETDLAMBDATEST_LINEARLEARNER_H
+#endif //SWIFTTD_H
