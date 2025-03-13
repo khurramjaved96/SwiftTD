@@ -58,10 +58,6 @@ float Math::DotProduct(std::vector<float> &a, std::vector<float> &b)
 float SwiftTDDense::Step(std::vector<float> &features, float reward)
 {
     this->counter++;
-    //    std::vector<float> features(this->weights.size(), 0);
-    //    for (int i = 0; i < features_temp.size(); i++) {
-    //        features[features_temp[i]] = 1;
-    //    }
     float decay = this->gamma * this->lambda;
     this->v = Math::DotProduct(this->weights, features);
     float delta = reward + this->gamma * this->v - this->v_old;
