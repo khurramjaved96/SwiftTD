@@ -68,7 +68,7 @@ td_dense = swift_td.SwiftTDDense(
 # Use dense features
 features = [1.0, 0.0, 0.5, 0.2, 0.0]  # Dense feature vector
 reward = 1.0
-td_error = td_dense.step(features, reward)
+prediction = td_dense.step(features, reward)
 
 # Get learned weights
 weights = td_dense.get_weights()
@@ -88,7 +88,7 @@ td_sparse = swift_td.SwiftTDSparse(
 # Use sparse features (only active feature indices)
 active_features = [1, 42, 999]  # Indices of active features
 reward = 1.0
-td_error = td_sparse.step(active_features, reward)
+prediction = td_sparse.step(active_features, reward)
 ```
 
 ## Resources
