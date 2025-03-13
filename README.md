@@ -1,4 +1,4 @@
-# SwiftTD
+# SwiftTD (Python and C++)
 
 SwiftTD is an implementation of temporal difference learning with adaptive step sizes. It can be combined with neural networks by applying it to only the last layer.
 
