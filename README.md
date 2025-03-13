@@ -55,7 +55,7 @@ import swift_td
 
 # Create a dense TD learner
 td_dense = swift_td.SwiftTDDense(
-    num_features=10,     # Number of input features
+    num_features=5,     # Number of input features
     lambda_=0.99,        # Lambda parameter for eligibility traces
     initial_alpha=1e-6,  # Initial learning rate
     gamma=0.99,        # Discount factor
