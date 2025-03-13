@@ -7,28 +7,28 @@
 
 #include <vector>
 #include <random>
-class Math {
+class Math
+{
 public:
     static float DotProduct(std::vector<float> &a, std::vector<float> &b);
 };
 
-class SwiftTD {
+class SwiftTD
+{
 protected:
     float gamma;
     std::vector<float> weights;
+
 public:
     SwiftTD();
-
     std::vector<float> GetWeights();
-
     void SetGamma(float gamma);
 };
 
-
-class SwiftTDDense : public SwiftTD {
+class SwiftTDDense : public SwiftTD
+{
 private:
     int counter;
-
     std::vector<float> h;
     std::vector<float> h_old;
     std::vector<float> h_temp;
@@ -48,25 +48,21 @@ private:
     float v_old;
     float v;
     float eta;
-
     float eps;
 
 public:
     std::vector<float> betas;
     float unbounded_rate_of_learning;
     float actual_rate_of_learning;
-
     SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps, float max_step_size,
-                       float step_size_decay, float meta_step_size);
-
+                 float step_size_decay, float meta_step_size);
     float Step(std::vector<float> &features_indices, float reward);
 };
 
-
-class SwiftTDSparse : public SwiftTD {
+class SwiftTDSparse : public SwiftTD
+{
 private:
     int counter;
-
     std::vector<float> h;
     std::vector<float> h_old;
     std::vector<float> h_temp;
@@ -96,11 +92,10 @@ public:
     float actual_rate_of_learning;
 
     SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma, float eps,
-                            float max_step_size,
-                            float step_size_decay, float meta_step_size);
+                  float max_step_size,
+                  float step_size_decay, float meta_step_size);
 
     float Step(std::vector<int> &features_indices, float reward);
 };
 
-
-#endif //SWIFTTD_H
+#endif // SWIFTTD_H
