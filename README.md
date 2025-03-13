@@ -56,13 +56,13 @@ import swift_td
 # Create a dense TD learner
 td_dense = swift_td.SwiftTDDense(
     num_features=10,     # Number of input features
-    lambda_=0.9,        # Lambda parameter for eligibility traces
-    initial_alpha=0.1,  # Initial learning rate
+    lambda_=0.99,        # Lambda parameter for eligibility traces
+    initial_alpha=1e-6,  # Initial learning rate
     gamma=0.99,        # Discount factor
     eps=1e-8,          # Small constant for numerical stability
-    max_step_size=1.0, # Maximum allowed step size
-    step_size_decay=0.5, # Step size decay rate
-    meta_step_size=0.01  # Meta learning rate
+    max_step_size=0.5, # Maximum allowed step size
+    step_size_decay=0.99, # Step size decay rate
+    meta_step_size=1e-3  # Meta learning rate
 )
 
 # Use dense features
@@ -76,13 +76,13 @@ weights = td_dense.get_weights()
 # Create a sparse TD learner
 td_sparse = swift_td.SwiftTDSparse(
     num_features=1000,  # Can handle larger feature spaces efficiently
-    lambda_=0.9,
-    initial_alpha=0.1,
+    lambda_=0.99,
+    initial_alpha=1e-6,
     gamma=0.99,
     eps=1e-8,
-    max_step_size=1.0,
-    step_size_decay=0.5,
-    meta_step_size=0.01
+    max_step_size=0.5,
+    step_size_decay=0.99,
+    meta_step_size=1e-3
 )
 
 # Use sparse features (only active feature indices)
