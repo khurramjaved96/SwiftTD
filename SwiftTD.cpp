@@ -4,7 +4,6 @@
 
 #include "SwiftTD.h"
 #include <vector>
-#include <iostream>
 #include <math.h>
 
 SwiftTD::SwiftTD()
