@@ -11,10 +11,6 @@ find_package(pybind11 CONFIG REQUIRED)
 add_library(SwiftTD STATIC SwiftTD.cpp)
 target_include_directories(SwiftTD PUBLIC ${CMAKE_SOURCE_DIR})
 
-# Create the test executable
-add_executable(Test main.cpp)
-target_link_libraries(Test PRIVATE SwiftTD)
-
 # Create Python module
 pybind11_add_module(swift_td pybind.cpp)
 target_link_libraries(swift_td PRIVATE SwiftTD)
