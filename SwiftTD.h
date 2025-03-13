@@ -10,7 +10,7 @@
 class Math
 {
 public:
-    static float DotProduct(std::vector<float> &a, std::vector<float> &b);
+    static float DotProduct(const std::vector<float> &a, const std::vector<float> &b);
 };
 
 class SwiftTD
@@ -55,7 +55,7 @@ private:
 public:
     SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps, float max_step_size,
                  float step_size_decay, float meta_step_size);
-    float Step(std::vector<float> &features_indices, float reward);
+    float Step(const std::vector<float> &features_indices, float reward);
 };
 
 class SwiftTDSparse : public SwiftTD
@@ -91,7 +91,7 @@ public:
     SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma, float eps,
                   float max_step_size,
                   float step_size_decay, float meta_step_size);
-    float Step(std::vector<int> &features_indices, float reward);
+    float Step(const std::vector<int> &features_indices, float reward);
 };
 
 #endif // SWIFTTD_H

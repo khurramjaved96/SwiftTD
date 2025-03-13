@@ -45,7 +45,7 @@ SwiftTDDense::SwiftTDDense(int num_features, float lambda, float initial_alpha, 
     this->log_eta = log(this->eta);
 }
 
-float Math::DotProduct(std::vector<float> &a, std::vector<float> &b)
+float Math::DotProduct(const std::vector<float> &a, const std::vector<float> &b)
 {
     float result = 0;
     for (int i = 0; i < a.size(); i++)
@@ -55,7 +55,7 @@ float Math::DotProduct(std::vector<float> &a, std::vector<float> &b)
     return result;
 }
 
-float SwiftTDDense::Step(std::vector<float> &features, float reward)
+float SwiftTDDense::Step(const std::vector<float> &features, float reward)
 {
     this->counter++;
     float decay = this->gamma * this->lambda;
@@ -172,7 +172,7 @@ SwiftTDSparse::SwiftTDSparse(int num_features, float lambda, float initial_alpha
     this->log_eta = log(this->eta);
 }
 
-float SwiftTDSparse::Step(std::vector<int> &features, float reward)
+float SwiftTDSparse::Step(const std::vector<int> &features, float reward)
 {
     this->counter++;
     float decay = this->gamma * this->lambda;

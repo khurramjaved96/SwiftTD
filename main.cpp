@@ -3,9 +3,9 @@
 //
 #include "SwiftTD.h"
 
-
 int main(){
-    SwiftTD* learner = new SwiftTDSparse(100, 0.99, 1e-8, 0.99, 1e-8, 0.25, 0.99, 1e-3);
+    SwiftTDSparse* learner = new SwiftTDSparse(100, 0.99, 1e-8, 0.99, 1e-8, 0.25, 0.99, 1e-3);
+    auto prediction = learner->Step({1, 2, 3, 4, 5}, 1.0);
     delete learner;
     return 0;
 }
