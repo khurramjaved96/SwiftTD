@@ -9,12 +9,12 @@ This repository has two implementations for temporal difference learning:
 
 2. **SwiftTDSparse**: This implementation is optimized for sparse feature vectors, where only a subset of features are active or relevant at any given time. It is ideal for situations with large feature spaces and sparse data representation.
 
-Both implementations provide a `Step()` method for updating the value function:
+Both implementations provide a `Step()` method for updating the value function and returning the value prediction:
 
-- `SwiftTDDense::Step(std::vector<float> &features, float reward)`
-- `SwiftTDSparse::Step(std::vector<int> &feature_indices, float reward)`
+- `float prediction = SwiftTDDense::Step(std::vector<float> &features, float reward)`
+- `float prediction = SwiftTDSparse::Step(std::vector<int> &feature_indices, float reward)`
 
-The main difference is that `SwiftTDSparse` takes feature indices instead of dense feature values.
+The main difference between the two implementations is that `SwiftTDSparse` takes feature indices instead of dense feature values.
 
 ## Resources
 - [Paper (PDF)](https://khurramjaved.com/swifttd.pdf)
