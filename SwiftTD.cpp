@@ -6,14 +6,7 @@
 #include <vector>
 #include <math.h>
 
-SwiftTD::SwiftTD()
-{
-}
 
-std::vector<float> SwiftTD::GetWeights()
-{
-    return this->weights;
-}
 
 SwiftTDDense::SwiftTDDense(int num_features, float lambda, float initial_alpha, float gamma, float eps,
                            float max_step_size, float step_size_decay, float meta_step_size)
@@ -134,11 +127,6 @@ float SwiftTDDense::Step(const std::vector<float> &features, float reward)
     }
     this->v_old = this->v;
     return this->v;
-}
-
-void SwiftTD::SetGamma(float gamma)
-{
-    this->gamma = gamma;
 }
 
 SwiftTDSparse::SwiftTDSparse(int num_features, float lambda, float initial_alpha, float gamma,

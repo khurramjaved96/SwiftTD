@@ -7,22 +7,8 @@ namespace py = pybind11;
 PYBIND11_MODULE(swift_td, m) {
     m.doc() = "Python bindings for SwiftTD reinforcement learning algorithm"; // Module docstring
 
-    // Bind the Math class
-    py::class_<Math>(m, "Math")
-        .def_static("dot_product", &Math::DotProduct, 
-            "Compute dot product of two vectors",
-            py::arg("a"), py::arg("b"));
-
-    // Bind the base SwiftTD class
-    py::class_<SwiftTD>(m, "SwiftTD")
-        .def("get_weights", &SwiftTD::GetWeights, 
-            "Get the current weight vector")
-        .def("set_gamma", &SwiftTD::SetGamma, 
-            "Set the discount factor gamma",
-            py::arg("gamma"));
-
     // Bind SwiftTDDense class
-    py::class_<SwiftTDDense, SwiftTD>(m, "SwiftTDDense")
+    py::class_<SwiftTDDense>(m, "SwiftTDDense")
         .def(py::init<int, float, float, float, float, float, float, float>(),
             "Initialize SwiftTDDense algorithm",
             py::arg("num_features"),
@@ -39,7 +25,7 @@ PYBIND11_MODULE(swift_td, m) {
             py::arg("reward"));
 
     // Bind SwiftTDSparse class
-    py::class_<SwiftTDSparse, SwiftTD>(m, "SwiftTDSparse")
+    py::class_<SwiftTDSparse>(m, "SwiftTDSparse")
         .def(py::init<int, float, float, float, float, float, float, float>(),
             "Initialize SwiftTDSparse algorithm",
             py::arg("num_features"),
