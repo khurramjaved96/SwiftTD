@@ -4,7 +4,24 @@ SwiftTD is an implementation of temporal difference learning with adaptive step 
 
 ## Installation
 
-First, install pybind11 which is required for Python bindings:
+### Prerequisites
+
+First, install the required build tools:
+
+```bash
+# On Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install build-essential cmake g++
+
+# On macOS with Homebrew
+brew install cmake
+
+# On Windows
+# 1. Install Visual Studio with C++ development tools
+# 2. Install CMake from https://cmake.org/download/
+```
+
+Then, install pybind11 which is required for Python bindings:
 
 ```bash
 # On Ubuntu/Debian
@@ -18,6 +35,15 @@ vcpkg install pybind11
 
 # Or via pip (works on all platforms)
 pip install pybind11
+```
+
+You'll also need Python development headers:
+
+```bash
+# On Ubuntu/Debian
+sudo apt-get install python3-dev
+
+# On macOS and Windows, these come with Python installations
 ```
 
 ### Building and Installing
