@@ -88,11 +88,11 @@ import swift_td
 # Create a dense TD learner
 td_dense = swift_td.SwiftTDDense(
     num_features=5,     # Number of input features
-    lambda_=0.99,        # Lambda parameter for eligibility traces
-    initial_alpha=1e-6,  # Initial learning rate
+    lambda_=0.95,        # Lambda parameter for eligibility traces
+    initial_alpha=1e-2,  # Initial learning rate
     gamma=0.99,        # Discount factor
     eps=1e-8,          # Small constant for numerical stability
-    max_step_size=0.5, # Maximum allowed step size
+    max_step_size=0.1, # Maximum allowed step size
     step_size_decay=0.99, # Step size decay rate
     meta_step_size=1e-3  # Meta learning rate
 )
@@ -101,35 +101,34 @@ td_dense = swift_td.SwiftTDDense(
 features = [1.0, 0.0, 0.5, 0.2, 0.0]  # Dense feature vector
 reward = 1.0
 prediction = td_dense.step(features, reward)
+print("Dense prediction:", prediction)
 
-# Get learned weights
-weights = td_dense.get_weights()
-
-# Create a sparse TD learner
+# Create a sparse binary TD learner
 td_sparse = swift_td.SwiftTDSparse(
     num_features=1000,  # Can handle larger feature spaces efficiently
-    lambda_=0.99,
-    initial_alpha=1e-6,
+    lambda_=0.95,
+    initial_alpha=1e-2,
     gamma=0.99,
     eps=1e-8,
-    max_step_size=0.5,
+    max_step_size=0.1,
     step_size_decay=0.99,
     meta_step_size=1e-3
 )
 
-# Use sparse features (only active feature indices)
+# Use sparse binary features (only active feature indices)
 active_features = [1, 42, 999]  # Indices of active features
 reward = 1.0
 prediction = td_sparse.step(active_features, reward)
+print("Sparse binary prediction:", prediction)
 
 # Create a sparse non-binary TD learner
 td_sparse_nonbinary = swift_td.SwiftTDSparseNonBinary(
     num_features=1000,  # Can handle larger feature spaces efficiently
-    lambda_=0.99,
-    initial_alpha=1e-6,
+    lambda_=0.95,
+    initial_alpha=1e-2,
     gamma=0.99,
     eps=1e-8,
-    max_step_size=0.5,
+    max_step_size=0.1,
     step_size_decay=0.99,
     meta_step_size=1e-3
 )
@@ -138,6 +137,7 @@ td_sparse_nonbinary = swift_td.SwiftTDSparseNonBinary(
 feature_values = [(1, 0.8), (42, 0.3), (999, 1.2)]  # (index, value) pairs
 reward = 1.0
 prediction = td_sparse_nonbinary.step(feature_values, reward)
+print("Sparse non-binary prediction:", prediction)
 ```
 
 ## Resources
