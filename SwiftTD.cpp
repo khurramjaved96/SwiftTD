@@ -356,7 +356,7 @@ float SwiftTDSparseAndNonBinaryFeatures::Step(const std::vector<std::pair<int, f
         }
         this->z[index.first] += this->z_delta[index.first] * (1 - t);
         this->p[index.first] += this->h_old[index.first] * index.second;
-        this->z_bar[index.first] += this->z_delta[index.first] * (1 - t - this->z_bar[index.first]) * index.second;
+        this->z_bar[index.first] += this->z_delta[index.first] * (1 - t - this->z_bar[index.first]* index.second) ;
         this->h_temp[index.first] = this->h[index.first] - this->h_old[index.first] * index.second * (this->z[index.
                     first] - this->
                 z_delta[index.first]) -
