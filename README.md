@@ -4,57 +4,14 @@ SwiftTD is an implementation of temporal difference learning with adaptive step 
 
 ## Installation
 
-### Prerequisites
+### PyPI Installation (Recommended)
 
-First, install the required build tools:
-
-```bash
-# On Ubuntu/Debian
-sudo apt-get update
-sudo apt-get install build-essential cmake g++
-
-# On macOS with Homebrew
-brew install cmake
-
-# On Windows
-# 1. Install Visual Studio with C++ development tools
-# 2. Install CMake from https://cmake.org/download/
-```
-
-Then, install pybind11 which is required for Python bindings:
+The easiest way to install SwiftTD is via PyPI:
 
 ```bash
-# On Ubuntu/Debian
-sudo apt-get install pybind11-dev
-
-# On macOS with Homebrew
-brew install pybind11
-
-# On Windows with vcpkg
-vcpkg install pybind11
-
-# Or via pip (works on all platforms)
-pip install pybind11
+pip install swifttd
 ```
 
-You'll also need Python development headers:
-
-```bash
-# On Ubuntu/Debian
-sudo apt-get install python3-dev
-
-# On macOS and Windows, these come with Python installations
-```
-
-### Building and Installing
-
-```bash
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-```
 
 ## Usage
 
@@ -83,10 +40,10 @@ The main differences between the implementations are:
 After installation, you can use SwiftTD in Python:
 
 ```python
-import swift_td
+import swifttd
 
 # Create a dense TD learner
-td_dense = swift_td.SwiftTDDense(
+td_dense = swifttd.SwiftTDDense(
     num_features=5,     # Number of input features
     lambda_=0.95,        # Lambda parameter for eligibility traces
     initial_alpha=1e-2,  # Initial learning rate
@@ -104,7 +61,7 @@ prediction = td_dense.step(features, reward)
 print("Dense prediction:", prediction)
 
 # Create a sparse binary TD learner
-td_sparse = swift_td.SwiftTDSparse(
+td_sparse = swifttd.SwiftTDSparse(
     num_features=1000,  # Can handle larger feature spaces efficiently
     lambda_=0.95,
     initial_alpha=1e-2,
@@ -122,7 +79,7 @@ prediction = td_sparse.step(active_features, reward)
 print("Sparse binary prediction:", prediction)
 
 # Create a sparse non-binary TD learner
-td_sparse_nonbinary = swift_td.SwiftTDSparseNonBinary(
+td_sparse_nonbinary = swifttd.SwiftTDSparseNonBinary(
     num_features=1000,  # Can handle larger feature spaces efficiently
     lambda_=0.95,
     initial_alpha=1e-2,
