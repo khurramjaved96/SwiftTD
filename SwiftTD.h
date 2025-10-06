@@ -84,9 +84,8 @@ class SwiftTDSparseAndBinaryFeatures
     float gamma;
 
 public:
-    SwiftTDSparseAndBinaryFeatures(int num_features, float lambda, float alpha, float gamma, float epsilon,
-                                   float meta_step_size,
-                                   float eta, float decay);
+    SwiftTDSparseAndBinaryFeatures(int num_features, float lambda_, float initial_alpha, float gamma_, float epsilon_,
+                                   float eta_, float step_size_decay_, float meta_step_size_);
     float Step(const std::vector<int>& feature_indices, float reward);
 };
 
@@ -123,9 +122,9 @@ class SwiftTDSparseAndNonBinaryFeatures
     float gamma;
 
 public:
-    SwiftTDSparseAndNonBinaryFeatures(int num_features, float lambda, float alpha, float gamma, float epsilon,
-                                      float meta_step_size,
-                                      float eta, float decay);
+    SwiftTDSparseAndNonBinaryFeatures(int num_features, float lambda_, float initial_alpha, float gamma_,
+                                      float epsilon_,
+                                      float eta_, float step_size_decay_, float meta_step_size_);
     float Step(const std::vector<std::pair<int, float>>& feature_indices, float reward);
 };
 

@@ -113,13 +113,10 @@ float SwiftTDDense::Step(const std::vector<float>& features, float reward)
     return v;
 }
 
-SwiftTDSparseAndBinaryFeatures::SwiftTDSparseAndBinaryFeatures(int num_features,
-                                                               float lambda_,
-                                                               float alpha,
-                                                               float gamma_,
-                                                               float epsilon_,
-                                                               float meta_step_size_,
-                                                               float eta_, float decay_)
+SwiftTDSparseAndBinaryFeatures::SwiftTDSparseAndBinaryFeatures(int num_features, float lambda_, float initial_alpha,
+                                                               float gamma_, float epsilon_,
+                                                               float eta_, float step_size_decay_,
+                                                               float meta_step_size_)
 {
     this->gamma = gamma_;
     this->w = std::vector<float>(num_features, 0);
@@ -131,7 +128,7 @@ SwiftTDSparseAndBinaryFeatures::SwiftTDSparseAndBinaryFeatures(int num_features,
     this->h = std::vector<float>(num_features, 0);
     this->h_old = std::vector<float>(num_features, 0);
     this->h_temp = std::vector<float>(num_features, 0);
-    this->beta = std::vector<float>(num_features, log(alpha));
+    this->beta = std::vector<float>(num_features, log(initial_alpha));
     this->z_bar = std::vector<float>(num_features, 0);
     this->p = std::vector<float>(num_features, 0);
 
@@ -142,7 +139,7 @@ SwiftTDSparseAndBinaryFeatures::SwiftTDSparseAndBinaryFeatures(int num_features,
     this->epsilon = epsilon_;
     this->v_delta = 0;
     this->eta = eta_;
-    this->decay = decay_;
+    this->decay = step_size_decay_;
 
     this->meta_step_size = meta_step_size_;
 }
@@ -239,13 +236,10 @@ float SwiftTDSparseAndBinaryFeatures::Step(const std::vector<int>& feature_indic
 }
 
 
-SwiftTDSparseAndNonBinaryFeatures::SwiftTDSparseAndNonBinaryFeatures(int num_features,
-                                                                     float lambda_,
-                                                                     float alpha,
-                                                                     float gamma_,
-                                                                     float epsilon_,
-                                                                     float meta_step_size_,
-                                                                     float eta_, float decay_)
+SwiftTDSparseAndNonBinaryFeatures::SwiftTDSparseAndNonBinaryFeatures(int num_features, float lambda_,
+                                                                     float initial_alpha, float gamma_, float epsilon_,
+                                                                     float eta_, float step_size_decay_,
+                                                                     float meta_step_size_)
 {
     this->gamma = gamma_;
     this->w = std::vector<float>(num_features, 0);
@@ -257,7 +251,7 @@ SwiftTDSparseAndNonBinaryFeatures::SwiftTDSparseAndNonBinaryFeatures(int num_fea
     this->h = std::vector<float>(num_features, 0);
     this->h_old = std::vector<float>(num_features, 0);
     this->h_temp = std::vector<float>(num_features, 0);
-    this->beta = std::vector<float>(num_features, log(alpha));
+    this->beta = std::vector<float>(num_features, log(initial_alpha));
     this->z_bar = std::vector<float>(num_features, 0);
     this->p = std::vector<float>(num_features, 0);
 
@@ -268,7 +262,7 @@ SwiftTDSparseAndNonBinaryFeatures::SwiftTDSparseAndNonBinaryFeatures(int num_fea
     this->epsilon = epsilon_;
     this->v_delta = 0;
     this->eta = eta_;
-    this->decay = decay_;
+    this->decay = step_size_decay_;
 
     this->meta_step_size = meta_step_size_;
 }
@@ -356,7 +350,7 @@ float SwiftTDSparseAndNonBinaryFeatures::Step(const std::vector<std::pair<int, f
         }
         this->z[index.first] += this->z_delta[index.first] * (1 - t);
         this->p[index.first] += this->h_old[index.first] * index.second;
-        this->z_bar[index.first] += this->z_delta[index.first] * (1 - t - this->z_bar[index.first]* index.second) ;
+        this->z_bar[index.first] += this->z_delta[index.first] * (1 - t - this->z_bar[index.first] * index.second);
         this->h_temp[index.first] = this->h[index.first] - this->h_old[index.first] * index.second * (this->z[index.
                     first] - this->
                 z_delta[index.first]) -
