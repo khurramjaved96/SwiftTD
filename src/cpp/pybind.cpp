@@ -4,7 +4,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(swift_td, m)
+PYBIND11_MODULE(swift_algorithms, m)
 {
      m.doc() = "Python bindings for SwiftTD reinforcement learning algorithm"; // Module docstring
      py::class_<SwiftTDNonSparse>(m, "SwiftTDNonSparse")
