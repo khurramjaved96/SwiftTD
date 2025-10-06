@@ -25,13 +25,7 @@ jobs:
       # cibuildwheel builds wheels for all CPython versions by default
       - uses: actions/setup-python@v5
         with:
-          python-version: |
-            3.8
-            3.9
-            3.10
-            3.11
-            3.12
-            3.13
+          python-version: "3.12"
 
       - name: Install build tooling
         run: |
@@ -43,6 +37,7 @@ jobs:
           CIBW_SKIP: "pp* *-musllinux_*"     # skip PyPy & musllinux unless you want them
           CIBW_BUILD_VERBOSITY: "1"
           CIBW_TEST_COMMAND: "python -c \"import swifttd; print(swifttd.SwiftTDDense)\""
+          CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
           # macOS Intel+ARM handled by separate runners above
         run: |
           python -m cibuildwheel --output-dir dist
