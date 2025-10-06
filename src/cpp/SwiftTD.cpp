@@ -7,32 +7,31 @@
 #include <math.h>
 
 
-SwiftTDDense::SwiftTDDense(int num_features, float lambda_, float initial_alpha, float gamma_, float epsilon_,
-                           float eta_, float step_size_decay_, float meta_step_size_)
+SwiftTDNonSparse::SwiftTDNonSparse(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
+                                   float epsilon_init, float eta_init,
+                                   float decay_init, float meta_step_size_init)
 {
-    this->gamma = gamma_;
-    this->w = std::vector<float>(num_features, 0.0f);
-    this->featureVector = std::vector<float>(num_features, 0);
-    this->z = std::vector<float>(num_features, 0);
-    this->z_delta = std::vector<float>(num_features, 0);
-    this->delta_w = std::vector<float>(num_features, 0);
+    this->gamma = gamma_init;
+    this->w = std::vector<float>(number_of_features, 0.0f);
+    this->featureVector = std::vector<float>(number_of_features, 0);
+    this->z = std::vector<float>(number_of_features, 0);
+    this->z_delta = std::vector<float>(number_of_features, 0);
+    this->delta_w = std::vector<float>(number_of_features, 0);
 
-    this->h = std::vector<float>(num_features, 0);
-    this->h_old = std::vector<float>(num_features, 0);
-    this->h_temp = std::vector<float>(num_features, 0);
-    this->beta = std::vector<float>(num_features, log(initial_alpha));
-    this->z_bar = std::vector<float>(num_features, 0);
-    this->p = std::vector<float>(num_features, 0);
-
-    this->last_alpha = std::vector<float>(num_features, 0);
+    this->h = std::vector<float>(number_of_features, 0);
+    this->h_old = std::vector<float>(number_of_features, 0);
+    this->h_temp = std::vector<float>(number_of_features, 0);
+    this->beta = std::vector<float>(number_of_features, log(alpha_init));
+    this->z_bar = std::vector<float>(number_of_features, 0);
+    this->p = std::vector<float>(number_of_features, 0);
 
     this->v_old = 0;
-    this->lambda = lambda_;
-    this->epsilon = epsilon_;
+    this->lambda = lambda_init;
+    this->epsilon = epsilon_init;
     this->v_delta = 0;
-    this->eta = eta_;
-    this->decay = step_size_decay_;
-    this->meta_step_size = meta_step_size_;
+    this->eta = eta_init;
+    this->decay = decay_init;
+    this->meta_step_size = meta_step_size_init;
 }
 
 float Math::DotProduct(const std::vector<float>& a, const std::vector<float>& b)
@@ -45,7 +44,7 @@ float Math::DotProduct(const std::vector<float>& a, const std::vector<float>& b)
     return result;
 }
 
-float SwiftTDDense::Step(const std::vector<float>& features, float reward)
+float SwiftTDNonSparse::Step(const std::vector<float>& features, float reward)
 {
     float v = 0;
 
@@ -113,38 +112,38 @@ float SwiftTDDense::Step(const std::vector<float>& features, float reward)
     return v;
 }
 
-SwiftTDSparseAndBinaryFeatures::SwiftTDSparseAndBinaryFeatures(int num_features, float lambda_, float initial_alpha,
-                                                               float gamma_, float epsilon_,
-                                                               float eta_, float step_size_decay_,
-                                                               float meta_step_size_)
+SwiftTDBinaryFeatures::SwiftTDBinaryFeatures(int number_of_features, float lambda_init, float alpha_init,
+                                             float gamma_init,
+                                             float epsilon_init, float eta_init,
+                                             float decay_init, float meta_step_size_init)
 {
-    this->gamma = gamma_;
-    this->w = std::vector<float>(num_features, 0);
-    this->featureVector = std::vector<float>(num_features, 0);
-    this->z = std::vector<float>(num_features, 0);
-    this->z_delta = std::vector<float>(num_features, 0);
-    this->delta_w = std::vector<float>(num_features, 0);
+    this->gamma = gamma_init;
+    this->w = std::vector<float>(number_of_features, 0);
+    this->featureVector = std::vector<float>(number_of_features, 0);
+    this->z = std::vector<float>(number_of_features, 0);
+    this->z_delta = std::vector<float>(number_of_features, 0);
+    this->delta_w = std::vector<float>(number_of_features, 0);
 
-    this->h = std::vector<float>(num_features, 0);
-    this->h_old = std::vector<float>(num_features, 0);
-    this->h_temp = std::vector<float>(num_features, 0);
-    this->beta = std::vector<float>(num_features, log(initial_alpha));
-    this->z_bar = std::vector<float>(num_features, 0);
-    this->p = std::vector<float>(num_features, 0);
+    this->h = std::vector<float>(number_of_features, 0);
+    this->h_old = std::vector<float>(number_of_features, 0);
+    this->h_temp = std::vector<float>(number_of_features, 0);
+    this->beta = std::vector<float>(number_of_features, log(alpha_init));
+    this->z_bar = std::vector<float>(number_of_features, 0);
+    this->p = std::vector<float>(number_of_features, 0);
 
-    this->last_alpha = std::vector<float>(num_features, 0);
+    this->last_alpha = std::vector<float>(number_of_features, 0);
 
     this->v_old = 0;
-    this->lambda = lambda_;
-    this->epsilon = epsilon_;
+    this->lambda = lambda_init;
+    this->epsilon = epsilon_init;
     this->v_delta = 0;
-    this->eta = eta_;
-    this->decay = step_size_decay_;
+    this->eta = eta_init;
+    this->decay = decay_init;
 
-    this->meta_step_size = meta_step_size_;
+    this->meta_step_size = meta_step_size_init;
 }
 
-float SwiftTDSparseAndBinaryFeatures::Step(const std::vector<int>& feature_indices, float reward)
+float SwiftTDBinaryFeatures::Step(const std::vector<int>& feature_indices, float reward)
 {
     float v = 0;
 
@@ -236,38 +235,37 @@ float SwiftTDSparseAndBinaryFeatures::Step(const std::vector<int>& feature_indic
 }
 
 
-SwiftTDSparseAndNonBinaryFeatures::SwiftTDSparseAndNonBinaryFeatures(int num_features, float lambda_,
-                                                                     float initial_alpha, float gamma_, float epsilon_,
-                                                                     float eta_, float step_size_decay_,
-                                                                     float meta_step_size_)
+SwiftTD::SwiftTD(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
+                 float epsilon_init, float eta_init,
+                 float decay_init, float meta_step_size_init)
 {
-    this->gamma = gamma_;
-    this->w = std::vector<float>(num_features, 0);
-    this->featureVector = std::vector<float>(num_features, 0);
-    this->z = std::vector<float>(num_features, 0);
-    this->z_delta = std::vector<float>(num_features, 0);
-    this->delta_w = std::vector<float>(num_features, 0);
+    this->gamma = gamma_init;
+    this->w = std::vector<float>(number_of_features, 0);
+    this->featureVector = std::vector<float>(number_of_features, 0);
+    this->z = std::vector<float>(number_of_features, 0);
+    this->z_delta = std::vector<float>(number_of_features, 0);
+    this->delta_w = std::vector<float>(number_of_features, 0);
 
-    this->h = std::vector<float>(num_features, 0);
-    this->h_old = std::vector<float>(num_features, 0);
-    this->h_temp = std::vector<float>(num_features, 0);
-    this->beta = std::vector<float>(num_features, log(initial_alpha));
-    this->z_bar = std::vector<float>(num_features, 0);
-    this->p = std::vector<float>(num_features, 0);
+    this->h = std::vector<float>(number_of_features, 0);
+    this->h_old = std::vector<float>(number_of_features, 0);
+    this->h_temp = std::vector<float>(number_of_features, 0);
+    this->beta = std::vector<float>(number_of_features, log(alpha_init));
+    this->z_bar = std::vector<float>(number_of_features, 0);
+    this->p = std::vector<float>(number_of_features, 0);
 
-    this->last_alpha = std::vector<float>(num_features, 0);
+    this->last_alpha = std::vector<float>(number_of_features, 0);
 
     this->v_old = 0;
-    this->lambda = lambda_;
-    this->epsilon = epsilon_;
+    this->lambda = lambda_init;
+    this->epsilon = epsilon_init;
     this->v_delta = 0;
-    this->eta = eta_;
-    this->decay = step_size_decay_;
+    this->eta = eta_init;
+    this->decay = decay_init;
 
-    this->meta_step_size = meta_step_size_;
+    this->meta_step_size = meta_step_size_init;
 }
 
-float SwiftTDSparseAndNonBinaryFeatures::Step(const std::vector<std::pair<int, float>>& feature_indices, float reward)
+float SwiftTD::Step(const std::vector<std::pair<int, float>>& feature_indices, float reward)
 {
     float v = 0;
 

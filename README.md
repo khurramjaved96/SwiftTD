@@ -1,6 +1,6 @@
-# SwiftTD (Python and C++)
+# SwiftTD: A Fast and Robust Algorithm for Temporal Difference Learning
 
-SwiftTD is a fast and robust TD learning algorithm. It uses linear function approximation. 
+SwiftTD is a robust TD learner that combines the ideas of step-size adaptation with a bound on the rate of learning to a learner that performs well across hyper-parameters. These versions use linear-function approximation. 
 
 ## Installation
 
