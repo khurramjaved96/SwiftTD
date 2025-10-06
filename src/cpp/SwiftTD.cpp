@@ -31,7 +31,7 @@ SwiftTDDense::SwiftTDDense(int num_features, float lambda_, float initial_alpha,
     this->epsilon = epsilon_;
     this->v_delta = 0;
     this->eta = eta_;
-
+    this->decay = step_size_decay_;
     this->meta_step_size = meta_step_size_;
 }
 

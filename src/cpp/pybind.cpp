@@ -10,7 +10,7 @@ PYBIND11_MODULE(swift_td, m) {
     // Bind SwiftTDDense class
     py::class_<SwiftTDDense>(m, "SwiftTDDense")
         .def(py::init<int, float, float, float, float, float, float, float>(),
-            "Initialize SwiftTDDense algorithm",
+            "Initialize the SwiftTDDense algorithm",
             py::arg("num_features"),
             py::arg("lambda_"),
             py::arg("initial_alpha"),
@@ -27,7 +27,7 @@ PYBIND11_MODULE(swift_td, m) {
     // Bind SwiftTDSparse class
     py::class_<SwiftTDSparseAndBinaryFeatures>(m, "SwiftTDSparse")
         .def(py::init<int, float, float, float, float, float, float, float>(),
-            "Initialize SwiftTDSparse algorithm",
+            "Initialize the SwiftTDSparse algorithm",
             py::arg("num_features"),
             py::arg("lambda_"),
             py::arg("initial_alpha"),
@@ -44,7 +44,7 @@ PYBIND11_MODULE(swift_td, m) {
     // Bind SwiftTDSparseAndNonBinaryFeatures class
     py::class_<SwiftTDSparseAndNonBinaryFeatures>(m, "SwiftTDSparseNonBinary")
         .def(py::init<int, float, float, float, float, float, float, float>(),
-            "Initialize SwiftTDSparseAndNonBinaryFeatures algorithm",
+            "Initialize the SwiftTDSparseAndNonBinaryFeatures algorithm",
             py::arg("num_features"),
             py::arg("lambda_"),
             py::arg("initial_alpha"),
