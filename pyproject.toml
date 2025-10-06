@@ -21,7 +21,7 @@ Homepage = "https://github.com/khurramjaved96/SwiftTD"
 
 [tool.scikit-build]
 # Where the pure-Python package lives (create these files below)
-wheel.packages = ["src/swift_td"]
+wheel.packages = ["src/swifttd"]
 
 [tool.scikit-build.cmake]
 minimum-version = "3.21"

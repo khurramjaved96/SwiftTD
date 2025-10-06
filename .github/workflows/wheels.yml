@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
     tags: [ "v*" ]   # e.g., v0.1.0
-  workflow_dispatch: {}
+  workflow_dispatch: { }
 
 jobs:
   build_wheels:
@@ -15,10 +15,10 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-#          - os: windows-latest
-#          - os: macos-13      # Intel x86_64
-#          - os: macos-14      # Apple Silicon arm64
-#          - os: ubuntu-24.04
+    #          - os: windows-latest
+    #          - os: macos-13      # Intel x86_64
+    #          - os: macos-14      # Apple Silicon arm64
+    #          - os: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +36,7 @@ jobs:
         env:
           CIBW_SKIP: "pp* *-musllinux_*"     # skip PyPy & musllinux unless you want them
           CIBW_BUILD_VERBOSITY: "1"
-          CIBW_TEST_COMMAND: "python -c \"import swift_td; print(swift_td.SwiftTDDense)\""
+          CIBW_TEST_COMMAND: "python -c \"import swifttd; print(swifttd.SwiftTDDense)\""
           CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
           # macOS Intel+ARM handled by separate runners above
         run: |
@@ -71,7 +71,7 @@ jobs:
 
   publish:
     name: Publish to (Test)PyPI
-    needs: [build_wheels, build_sdist]
+    needs: [ build_wheels, build_sdist ]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v4
