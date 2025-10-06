@@ -1,29 +1,37 @@
 cmake_minimum_required(VERSION 3.21)
-project(SwiftTD)
+
+project(SwiftTD LANGUAGES CXX)
+
+# Build settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
-# Find Python and pybind11
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+# pybind11 + Python (Development.Module ensures proper extension build flags)
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
 
-# Create the main library
-add_library(SwiftTD STATIC SwiftTD.cpp)
-target_include_directories(SwiftTD PUBLIC ${CMAKE_SOURCE_DIR})
+# C++ core library (not installed; linked into the Python extension)
+add_library(SwiftTD STATIC
+        src/cpp/SwiftTD.cpp
+)
+target_include_directories(SwiftTD PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp
+)
 
-# Create Python module
-pybind11_add_module(swift_td pybind.cpp)
+# Python extension module (top-level: import swift_td)
+pybind11_add_module(swift_td
+        src/cpp/pybind.cpp
+)
+
 target_link_libraries(swift_td PRIVATE SwiftTD)
 
-# Install targets
-install(TARGETS SwiftTD
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include)
-
-install(FILES SwiftTD.h DESTINATION include)
-
-install(TARGETS swift_td 
-        LIBRARY DESTINATION ${Python_SITEARCH}
-        ARCHIVE DESTINATION ${Python_SITEARCH})
+# Let scikit-build-core place the extension correctly inside the wheel
+# (use SKBUILD_PLATLIB_DIR instead of Python_SITEARCH)
+install(TARGETS swift_td
+        LIBRARY DESTINATION "${SKBUILD_PLATLIB_DIR}"
+        ARCHIVE DESTINATION "${SKBUILD_PLATLIB_DIR}"
+        RUNTIME DESTINATION "${SKBUILD_PLATLIB_DIR}"
+)

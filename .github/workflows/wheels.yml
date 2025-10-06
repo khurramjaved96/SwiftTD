@@ -1,0 +1,104 @@
+name: Build & Publish Wheels
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ "v*" ]   # e.g., v0.1.0
+  workflow_dispatch: {}
+
+jobs:
+  build_wheels:
+    name: Build wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+          - os: windows-latest
+          - os: macos-13      # Intel x86_64
+          - os: macos-14      # Apple Silicon arm64
+    steps:
+      - uses: actions/checkout@v4
+
+      # cibuildwheel builds wheels for all CPython versions by default
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install cibuildwheel==2.* twine build
+
+      - name: Build wheels with cibuildwheel
+        env:
+          CIBW_SKIP: "pp* *-musllinux_*"     # skip PyPy & musllinux unless you want them
+          CIBW_BUILD_VERBOSITY: "1"
+          CIBW_TEST_COMMAND: "python -c \"import swifttd; print(swifttd.SwiftTDDense)\""
+          # macOS Intel+ARM handled by separate runners above
+        run: |
+          python -m cibuildwheel --output-dir dist
+
+      - name: Upload wheel artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-wheels-${{ matrix.os }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  build_sdist:
+    name: Build sdist
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build sdist
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          python -m build --sdist
+      - name: Upload sdist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error
+
+  publish:
+    name: Publish to (Test)PyPI
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Combine dists
+        run: |
+          mkdir -p dist
+          find artifacts -type f -name "*.whl" -exec cp {} dist/ \;
+          find artifacts -type f -name "*.tar.gz" -exec cp {} dist/ \;
+          ls -la dist
+      - name: Install twine
+        run: |
+          python -m pip install --upgrade pip
+          pip install twine
+      - name: Upload to TestPyPI on branches
+        if: startsWith(github.ref, 'refs/heads/')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        run: |
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      - name: Upload to PyPI on tags
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*
