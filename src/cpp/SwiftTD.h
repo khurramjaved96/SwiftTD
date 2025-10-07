@@ -38,6 +38,7 @@ private:
     float meta_step_size;
 
     float eta;
+    float eta_min;
 
     float decay;
     float gamma;
@@ -45,7 +46,7 @@ private:
 public:
     SwiftTDNonSparse(int number_of_features, float lambda_init, float alpha_init, float gamma_init, float epsilon_init,
                      float eta_init,
-                     float decay_init, float meta_step_size_init);
+                     float decay_init, float meta_step_size_init, float eta_min = 1e-10);
     float Step(const std::vector<float>& features, float reward);
 };
 
@@ -76,6 +77,7 @@ class SwiftTDBinaryFeatures
     float meta_step_size;
 
     float eta;
+    float eta_min;
 
     float decay;
     float gamma;
@@ -83,7 +85,7 @@ class SwiftTDBinaryFeatures
 public:
     SwiftTDBinaryFeatures(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
                           float epsilon_init, float eta_init,
-                          float decay_init, float meta_step_size_init);
+                          float decay_init, float meta_step_size_init, float eta_min = 1e-10);
     float Step(const std::vector<int>& feature_indices, float reward);
 };
 
@@ -115,14 +117,15 @@ class SwiftTD
     float meta_step_size;
 
     float eta;
+    float eta_min;
 
     float decay;
     float gamma;
 
 public:
-    SwiftTD(int num_features, float lambda_, float initial_alpha, float gamma_,
-            float epsilon_,
-            float eta_, float step_size_decay_, float meta_step_size_);
+    SwiftTD(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
+                          float epsilon_init, float eta_init,
+                          float decay_init, float meta_step_size_init, float eta_min = 1e-10);
     float Step(const std::vector<std::pair<int, float>>& feature_indices, float reward);
 };
 

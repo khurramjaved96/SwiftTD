@@ -9,7 +9,7 @@
 
 SwiftTDNonSparse::SwiftTDNonSparse(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
                                    float epsilon_init, float eta_init,
-                                   float decay_init, float meta_step_size_init)
+                                   float decay_init, float meta_step_size_init, float eta_min_init)
 {
     this->gamma = gamma_init;
     this->w = std::vector<float>(number_of_features, 0.0f);
@@ -30,6 +30,7 @@ SwiftTDNonSparse::SwiftTDNonSparse(int number_of_features, float lambda_init, fl
     this->epsilon = epsilon_init;
     this->v_delta = 0;
     this->eta = eta_init;
+    this->eta_min = eta_min_init;
     this->decay = decay_init;
     this->meta_step_size = meta_step_size_init;
 }
@@ -47,7 +48,6 @@ float Math::DotProduct(const std::vector<float>& a, const std::vector<float>& b)
 float SwiftTDNonSparse::Step(const std::vector<float>& features, float reward)
 {
     float v = 0;
-
     for (int i = 0; i < features.size(); i++)
     {
         v += this->w[i] * features[i];
@@ -59,10 +59,14 @@ float SwiftTDNonSparse::Step(const std::vector<float>& features, float reward)
         this->delta_w[i] = delta * this->z[i] - z_delta[i] * this->v_delta;
         this->w[i] += this->delta_w[i];
         this->beta[i] +=
-            this->meta_step_size / (exp(this->beta[i]) + 1e-8) * (delta - v_delta) * this->p[i];
+            this->meta_step_size / (exp(this->beta[i])) * (delta - v_delta) * this->p[i];
         if (exp(this->beta[i]) > this->eta || isinf(exp(this->beta[i])))
         {
             this->beta[i] = log(this->eta);
+        }
+        if(exp(this->beta[i]) < log(this->eta_min))
+        {
+            this->beta[i] = log(this->eta_min);
         }
         this->h_old[i] = this->h[i];
         this->h[i] = this->h_temp[i] +
@@ -115,7 +119,7 @@ float SwiftTDNonSparse::Step(const std::vector<float>& features, float reward)
 SwiftTDBinaryFeatures::SwiftTDBinaryFeatures(int number_of_features, float lambda_init, float alpha_init,
                                              float gamma_init,
                                              float epsilon_init, float eta_init,
-                                             float decay_init, float meta_step_size_init)
+                                             float decay_init, float meta_step_size_init,  float eta_min_init)
 {
     this->gamma = gamma_init;
     this->w = std::vector<float>(number_of_features, 0);
@@ -138,6 +142,7 @@ SwiftTDBinaryFeatures::SwiftTDBinaryFeatures(int number_of_features, float lambd
     this->epsilon = epsilon_init;
     this->v_delta = 0;
     this->eta = eta_init;
+    this->eta_min = eta_min_init;
     this->decay = decay_init;
 
     this->meta_step_size = meta_step_size_init;
@@ -160,10 +165,14 @@ float SwiftTDBinaryFeatures::Step(const std::vector<int>& feature_indices, float
         this->delta_w[index] = delta * this->z[index] - z_delta[index] * this->v_delta;
         this->w[index] += this->delta_w[index];
         this->beta[index] +=
-            this->meta_step_size / (exp(this->beta[index]) + 1e-8) * (delta - v_delta) * this->p[index];
+            this->meta_step_size / (exp(this->beta[index])) * (delta - v_delta) * this->p[index];
         if (exp(this->beta[index]) > this->eta || isinf(exp(this->beta[index])))
         {
             this->beta[index] = log(this->eta);
+        }
+        if(exp(this->beta[index]) < log(this->eta_min))
+        {
+            this->beta[index] = log(this->eta_min);
         }
         this->h_old[index] = this->h[index];
         this->h[index] = this->h_temp[index] +
@@ -237,7 +246,7 @@ float SwiftTDBinaryFeatures::Step(const std::vector<int>& feature_indices, float
 
 SwiftTD::SwiftTD(int number_of_features, float lambda_init, float alpha_init, float gamma_init,
                  float epsilon_init, float eta_init,
-                 float decay_init, float meta_step_size_init)
+                 float decay_init, float meta_step_size_init,  float eta_min_init)
 {
     this->gamma = gamma_init;
     this->w = std::vector<float>(number_of_features, 0);
@@ -260,6 +269,7 @@ SwiftTD::SwiftTD(int number_of_features, float lambda_init, float alpha_init, fl
     this->epsilon = epsilon_init;
     this->v_delta = 0;
     this->eta = eta_init;
+    this->eta_min = eta_min_init;
     this->decay = decay_init;
 
     this->meta_step_size = meta_step_size_init;
@@ -282,10 +292,14 @@ float SwiftTD::Step(const std::vector<std::pair<int, float>>& feature_indices, f
         this->delta_w[index.first] = delta * this->z[index.first] - z_delta[index.first] * this->v_delta;
         this->w[index.first] += this->delta_w[index.first];
         this->beta[index.first] +=
-            this->meta_step_size / (exp(this->beta[index.first]) + 1e-8) * (delta - v_delta) * this->p[index.first];
+            this->meta_step_size / (exp(this->beta[index.first])) * (delta - v_delta) * this->p[index.first];
         if (exp(this->beta[index.first]) > this->eta || isinf(exp(this->beta[index.first])))
         {
             this->beta[index.first] = log(this->eta);
+        }
+        if(exp(this->beta[index.first]) < log(this->eta_min))
+        {
+            this->beta[index.first] = log(this->eta_min);
         }
         this->h_old[index.first] = this->h[index.first];
         this->h[index.first] = this->h_temp[index.first] +
@@ -321,7 +335,6 @@ float SwiftTD::Step(const std::vector<std::pair<int, float>>& feature_indices, f
     {
         E = rate_of_learning;
     }
-
 
     float t = 0;
     for (auto& index : feature_indices)
