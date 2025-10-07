@@ -1,16 +1,16 @@
 # SwiftTD: A Fast and Robust Algorithm for Temporal Difference Learning
 
-SwiftTD is a robust TD learner that combines the ideas of step-size adaptation with a bound on the rate of learning to a learner that performs well across hyper-parameters. These versions use linear-function approximation. 
+SwiftTD is an algorithm for learning value functions. It combines the ideas of step-size adaptation with the idea of a bound on the rate of learning. The implementations in this repository use linear function approximation. 
 
 ## Installation
 
 ```bash
-pip install swifttd
+pip install SwiftTD
 ```
 
 ## Usage
 
-After installation, you can use SwiftTD in Python:
+After installation, you can use the three implementations of SwiftTD in Python as: 
 
 ```python
 import swift_td
