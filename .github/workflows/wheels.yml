@@ -3,7 +3,7 @@ name: Build & Publish Wheels
 on:
   push:
     branches: [ main, master ]
-    tags: [ "v*" ]   # e.g., v0.1.0
+    tags: [ "v*" ]
   workflow_dispatch: { }
 
 jobs:
@@ -15,17 +15,23 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
+          - os: ubuntu-24.04
           - os: windows-latest
           - os: macos-13      # Intel x86_64
           - os: macos-14      # Apple Silicon arm64
-          - os: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
-      # cibuildwheel builds wheels for all CPython versions by default
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      # Enable QEMU so cibuildwheel can build aarch64 wheels on x86_64 Linux
+      - name: Setup QEMU (for Linux aarch64)
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
       - name: Install build tooling
         run: |
@@ -34,11 +40,13 @@ jobs:
 
       - name: Build wheels with cibuildwheel
         env:
-          CIBW_SKIP: "pp* *-musllinux_*"     # skip PyPy & musllinux unless you want them
+          # Build only x86_64 and aarch64 on Linux (drops i686)
+          CIBW_ARCHS_LINUX: "x86_64 aarch64"
+          # Optional skip list: no PyPy, no musllinux
+          CIBW_SKIP: "pp* *-musllinux_*"
           CIBW_BUILD_VERBOSITY: "1"
           CIBW_TEST_COMMAND: "python -c \"import swifttd; print(swifttd.SwiftTD)\""
           CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
-          # macOS Intel+ARM handled by separate runners above
         run: |
           python -m cibuildwheel --output-dir dist
 
