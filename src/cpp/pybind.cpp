@@ -44,7 +44,7 @@ PYBIND11_MODULE(swift_td, m)
 
      // Bind SwiftTDSparseAndNonBinaryFeatures class
      py::class_<SwiftTD>(m, "SwiftTD")
-          .def(py::init<int, float, float, float, float, float, float, float>(),
+          .def(py::init<int, float, float, float, float, float, float, float, float>(),
                "Initialize the SwiftTD algorithm",
                py::arg("num_of_features"),
                py::arg("lambda"),
