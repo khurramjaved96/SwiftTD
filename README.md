@@ -16,7 +16,7 @@ After installation, you can use SwiftTD in Python:
 import swift_td
 
 # Version of SwiftTD that expects the full feature vector as input. This should only be used if the feature representation is not sparse. Otherwise, the sparse versions are more efficient.
-td_dense = swift_td.SwiftTDDense(
+td_dense = swift_td.SwiftTDNonSparse(
     num_features=5,     # Number of input features
     lambda_=0.95,        # Lambda parameter for eligibility traces
     initial_alpha=1e-2,  # Initial learning rate
@@ -34,7 +34,7 @@ prediction = td_dense.step(features, reward)
 print("Dense prediction:", prediction)
 
 # Version of SwiftTD that expects the feature indices as input. This version assumes that the features are binary---0 or 1. For learning, the indices of the features that are 1 are provided. 
-td_sparse = swifttd.SwiftTDSparse(
+td_sparse = swifttd.SwiftTDBinaryFeatures(
     num_features=1000,  # Can handle larger feature spaces efficiently
     lambda_=0.95,
     initial_alpha=1e-2,
@@ -53,7 +53,7 @@ print("Sparse binary prediction:", prediction)
 
 # Version of SwiftTD that expects the feature indices and values as input. This version does not assume that the features are binary. For learning, it expects a list of (index, value) pairs. Only the indices of the features that are non-zero need to be provided. 
 
-td_sparse_nonbinary = swifttd.SwiftTDSparseNonBinary(
+td_sparse_nonbinary = swifttd.SwiftTD(
     num_features=1000,  # Can handle larger feature spaces efficiently
     lambda_=0.95,
     initial_alpha=1e-2,
