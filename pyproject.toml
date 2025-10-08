@@ -3,8 +3,8 @@ requires = ["scikit-build-core>=0.9", "pybind11>=2.12"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "SwiftTD"
-version = "0.1.7"
+name = "swifttd"
+version = "0.1.8"
 description = "SwiftTD: Fast and Robust TD Learning"
 readme = "README.md"
 requires-python = ">=3.7"

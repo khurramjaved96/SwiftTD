@@ -350,7 +350,7 @@ float SwiftTD::Step(const std::vector<std::pair<int, float>>& feature_indices, f
         }
         this->v_delta += this->delta_w[index.first] * index.second;
         this->z_delta[index.first] = (this->eta / E) * exp(this->beta[index.first]) * index.second;
-        this->last_alpha[index.first] = this->z_delta[index.first];
+        this->last_alpha[index.first] = (this->eta / E) * exp(this->beta[index.first]);
         if ((this->eta / E) < 1)
         {
             this->h_temp[index.first] = 0;
